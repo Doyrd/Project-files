@@ -1,0 +1,15 @@
+Left arrow key		-	move left
+Right arrow key		-	move right
+
+Space bar			-	jump
+
+c key			- 	stand still
+
+c key + arrow keys		-	aiming
+
+d + arrow keys		- 	shoot while walking
+
+c key + d key + arrow keys	- 	shooting while standing still
+
+c key +  down arrow key	-	crouch
+
