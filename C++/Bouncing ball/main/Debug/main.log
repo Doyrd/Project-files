@@ -1,0 +1,3 @@
+﻿  main.cpp
+d:\c++\assignments\bouncy ball\main\main.cpp(19): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  main.vcxproj -> D:\C++\Assignments\Bouncy ball\main\Debug\main.exe
