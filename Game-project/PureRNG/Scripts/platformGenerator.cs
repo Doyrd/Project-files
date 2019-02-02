@@ -1,0 +1,102 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class platformGenerator : MonoBehaviour
+{
+
+    public GameObject thePlatform;
+    public Transform generatePoint;
+    private float distanceBetween;
+
+    private float platformWidth;
+
+    public float distanceBetweenMin;
+    public float distanceBetweenMax;
+
+    /*public GameObject[] thePlatforms;*/
+    private int platformSelector;
+    private float[] platformWidths;
+
+    public objectPooler[] theObjectPools;
+
+    private float minHeight;
+    public Transform maxHeightPoint;
+    private float maxHeight;
+    public float maxHeightChange;
+    private float heightChange;
+
+    private collectableGenerator theCollectableGenerator;
+    public float randomCollectablePicker;
+
+    public float randomTrapPicker;
+    public objectPooler theTrapPools;
+
+    void Start()
+    {
+        /*platformWidth = thePlatform.GetComponent<BoxCollider2D>().size.x;*/
+        platformWidths = new float[theObjectPools.Length];
+        for (int i = 0; i < theObjectPools.Length; i++)
+        {
+            platformWidths[i] = theObjectPools[i].pooledObject.GetComponent<BoxCollider2D>().size.x;
+        }
+
+        minHeight = transform.position.y;
+        maxHeight = maxHeightPoint.position.y;
+
+        theCollectableGenerator = FindObjectOfType<collectableGenerator>();
+
+    }
+
+    void Update()
+    {
+        if(transform.position.x < generatePoint.position.x)
+        {
+            distanceBetween = Random.Range(distanceBetweenMin, distanceBetweenMax);
+
+            platformSelector = Random.Range(0, theObjectPools.Length);
+
+            heightChange = transform.position.y + Random.Range(maxHeightChange, -maxHeightChange);
+
+            if(heightChange > maxHeight)
+            {
+                heightChange = maxHeight;
+            }
+            else if(heightChange < minHeight)
+            {
+                heightChange = minHeight;
+            }
+
+            transform.position = new Vector3(transform.position.x + (platformWidths[platformSelector] / 2 ) + distanceBetween, heightChange, transform.position.z);
+
+            /*Instantiate(thePlatforms[platformSelector], transform.position, transform.rotation);*/
+
+            GameObject newPlatform = theObjectPools[platformSelector].GetPooledObject();
+            newPlatform.transform.position = transform.position;
+            newPlatform.transform.rotation = transform.rotation;
+            newPlatform.SetActive(true);
+
+            if(Random.Range(0f, 100f) < randomCollectablePicker)
+            {
+                theCollectableGenerator.spawnCollectables(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z));
+            }
+
+            if (Random.Range(0f, 100f) < randomTrapPicker)
+            {
+                GameObject newTrap = theTrapPools.GetPooledObject();
+
+                float trapXPosition = Random.Range(-platformWidths[platformSelector] / 2 + 1f, platformWidths[platformSelector] / 2 - 1f);
+
+                Vector3 trapPosition = new Vector3(trapXPosition, 0.7f, -1f);
+
+                newTrap.transform.position = transform.position + trapPosition;
+                newTrap.transform.rotation = transform.rotation;
+                newTrap.SetActive(true);
+            }
+
+            transform.position = new Vector3(transform.position.x + (platformWidths[platformSelector] / 2), transform.position.y, transform.position.z);
+
+        }
+    }
+
+}
